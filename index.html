@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Tool: URL Shortener, QR Code & Barcode Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tab-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .tab-button:hover::before {
+            left: 100%;
+        }
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-animate {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .btn-animate::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-animate:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        .btn-animate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+        }
+        .result-card {
+            animation: slideInUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .copy-success {
+            animation: copyPulse 0.6s ease-in-out;
+        }
+        @keyframes copyPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(34, 197, 94, 0.6); }
+            100% { transform: scale(1); }
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .pulse-ring {
+            animation: pulseRing 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulseRing {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            80%, 100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .icon-bounce {
+            animation: iconBounce 2s infinite;
+        }
+        @keyframes iconBounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-800 to-blue-900">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Animated Background Elements -->
+        <div class="fixed inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating" style="animation-delay: 4s;"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="text-center mb-12 relative z-10">
+            <div class="inline-block relative">
+                <div class="absolute -inset-4 bg-indigo-500 rounded-full blur-xl opacity-30 pulse-ring"></div>
+                <h1 class="text-5xl font-bold text-white mb-4 relative">
+                    <i class="fas fa-tools text-yellow-300 mr-3 icon-bounce"></i>
+                    मल्टी-टूल जनरेटर
+                </h1>
+            </div>
+            <p class="text-indigo-200 text-lg">URL Shortener • QR Code Generator • Barcode Generator</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="glass-effect rounded-2xl shadow-2xl overflow-hidden relative z-10">
+            <div class="flex flex-wrap">
+                <button class="tab-button active flex-1 px-6 py-5 text-center font-semibold text-white hover:bg-white/10 transition-all duration-300" onclick="switchTab('url-shortener')">
+                    <i class="fas fa-link mr-2"></i>URL Shortener
+                </button>
+                <button class="tab-button flex-1 px-6 py-5 text-center font-semibold text-white hover:bg-white/10 transition-all duration-300" onclick="switchTab('qr-generator')">
+                    <i class="fas fa-qrcode mr-2"></i>QR Code Generator
+                </button>
+                <button class="tab-button flex-1 px-6 py-5 text-center font-semibold text-white hover:bg-white/10 transition-all duration-300" onclick="switchTab('barcode-generator')">
+                    <i class="fas fa-barcode mr-2"></i>Barcode Generator
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="p-8">
+                <!-- URL Shortener Tab -->
+                <div id="url-shortener" class="tab-content active">
+                    <h2 class="text-3xl font-bold text-white mb-6 text-center">
+                        <i class="fas fa-link text-yellow-300 mr-2"></i>URL Shortener
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-indigo-200 mb-3">लंबा URL डालें</label>
+                            <div class="flex gap-3">
+                                <input type="url" id="long-url" placeholder="https://example.com/very-long-url" 
+                                    class="flex-1 px-5 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300">
+                                <button id="shorten-btn" onclick="shortenURL()" 
+                                    class="btn-animate px-8 py-4 gradient-bg text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
+                                    <i class="fas fa-compress-alt mr-2"></i>Shorten
+                                </button>
+                            </div>
+                        </div>
+                        <div id="short-url-result" class="hidden result-card">
+                            <label class="block text-sm font-medium text-indigo-200 mb-3">छोटा URL</label>
+                            <div class="flex gap-3">
+                                <input type="text" id="short-url" readonly 
+                                    class="flex-1 px-5 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300">
+                                <button onclick="copyToClipboard('short-url')" 
+                                    class="btn-animate px-8 py-4 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 hover:shadow-lg transition-all duration-300">
+                                    <i class="fas fa-copy mr-2"></i>Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Code Generator Tab -->
+                <div id="qr-generator" class="tab-content">
+                    <h2 class="text-3xl font-bold text-white mb-6 text-center">
+                        <i class="fas fa-qrcode text-yellow-300 mr-2"></i>QR Code Generator
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-indigo-200 mb-3">टेक्स्ट या URL डालें</label>
+                            <div class="flex gap-3">
+                                <input type="text" id="qr-text" placeholder="यहाँ टेक्स्ट या URL डालें" 
+                                    class="flex-1 px-5 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300">
+                                <button id="qr-btn" onclick="generateQR()" 
+                                    class="btn-animate px-8 py-4 gradient-bg text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
+                                    <i class="fas fa-magic mr-2"></i>Generate
+                                </button>
+                            </div>
+                        </div>
+                        <div id="qr-result" class="hidden result-card text-center">
+                            <div class="inline-block p-4 bg-white rounded-2xl shadow-xl mb-6 transform hover:scale-105 transition-transform duration-300">
+                                <img id="qr-image" class="rounded-lg" alt="QR Code">
+                            </div>
+                            <button onclick="downloadQR()" 
+                                class="btn-animate px-8 py-4 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 hover:shadow-lg transition-all duration-300">
+                                <i class="fas fa-download mr-2"></i>Download QR Code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barcode Generator Tab -->
+                <div id="barcode-generator" class="tab-content">
+                    <h2 class="text-3xl font-bold text-white mb-6 text-center">
+                        <i class="fas fa-barcode text-yellow-300 mr-2"></i>Barcode Generator
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-indigo-200 mb-3">टेक्स्ट या नंबर डालें</label>
+                            <div class="flex gap-3">
+                                <input type="text" id="barcode-text" placeholder="1234567890" 
+                                    class="flex-1 px-5 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300">
+                                <button id="barcode-btn" onclick="generateBarcode()" 
+                                    class="btn-animate px-8 py-4 gradient-bg text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
+                                    <i class="fas fa-magic mr-2"></i>Generate
+                                </button>
+                            </div>
+                        </div>
+                        <div id="barcode-result" class="hidden result-card text-center">
+                            <div class="inline-block p-4 bg-white rounded-2xl shadow-xl mb-6 transform hover:scale-105 transition-transform duration-300">
+                                <img id="barcode-image" class="rounded-lg" alt="Barcode">
+                            </div>
+                            <button onclick="downloadBarcode()" 
+                                class="btn-animate px-8 py-4 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 hover:shadow-lg transition-all duration-300">
+                                <i class="fas fa-download mr-2"></i>Download Barcode
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 text-indigo-300 relative z-10">
+            <p class="text-lg">Created with <i class="fas fa-heart text-red-400 animate-pulse"></i> using TinyURL, GoQR & Barcode APIs</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-y-full transition-transform duration-500 flex items-center">
+        <i class="fas fa-check-circle text-2xl mr-3"></i>
+        <span id="toast-message" class="font-medium">Success!</span>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tabs with animation
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab with animation
+            setTimeout(() => {
+                document.getElementById(tabName).classList.add('active');
+            }, 100);
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            toast.style.transform = 'translateY(0)';
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateY(200%)';
+            }, 3000);
+        }
+
+        // Copy to clipboard functionality
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            // Add animation
+            element.classList.add('copy-success');
+            setTimeout(() => element.classList.remove('copy-success'), 600);
+            
+            showToast('क्लिपबोर्ड पर कॉपी हो गया!');
+        }
+
+        // Show loading state
+        function showLoading(buttonId) {
+            const button = document.getElementById(buttonId);
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<div class="loading-spinner"></div>Processing...';
+            button.disabled = true;
+            return originalContent;
+        }
+
+        // Hide loading state
+        function hideLoading(buttonId, originalContent) {
+            const button = document.getElementById(buttonId);
+            button.innerHTML = originalContent;
+            button.disabled = false;
+        }
+
+        // URL Shortener using TinyURL API
+        async function shortenURL() {
+            const longUrl = document.getElementById('long-url').value.trim();
+            
+            if (!longUrl) {
+                document.getElementById('long-url').classList.add('shake');
+                setTimeout(() => document.getElementById('long-url').classList.remove('shake'), 500);
+                showToast('कृपया एक URL डालें!');
+                return;
+            }
+            
+            const originalContent = showLoading('shorten-btn');
+            
+            try {
+                const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+                const shortUrl = await response.text();
+                
+                document.getElementById('short-url').value = shortUrl;
+                document.getElementById('short-url-result').classList.remove('hidden');
+                showToast('URL छोटा कर दिया गया!');
+            } catch (error) {
+                showToast('URL छोटा करने में त्रुटि!');
+                console.error('Error:', error);
+            } finally {
+                hideLoading('shorten-btn', originalContent);
+            }
+        }
+
+        // QR Code Generator using GoQR API
+        function generateQR() {
+            const text = document.getElementById('qr-text').value.trim();
+            
+            if (!text) {
+                document.getElementById('qr-text').classList.add('shake');
+                setTimeout(() => document.getElementById('qr-text').classList.remove('shake'), 500);
+                showToast('कृपया टेक्स्ट डालें!');
+                return;
+            }
+            
+            const originalContent = showLoading('qr-btn');
+            
+            const qrImage = document.getElementById('qr-image');
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}`;
+            
+            qrImage.onload = function() {
+                document.getElementById('qr-result').classList.remove('hidden');
+                showToast('QR Code जनरेट हो गया!');
+                hideLoading('qr-btn', originalContent);
+            };
+            
+            qrImage.onerror = function() {
+                showToast('QR Code जनरेट करने में त्रुटि!');
+                hideLoading('qr-btn', originalContent);
+            };
+        }
+
+        // Download QR Code
+        function downloadQR() {
+            const qrImage = document.getElementById('qr-image');
+            const link = document.createElement('a');
+            link.download = 'qrcode.png';
+            link.href = qrImage.src;
+            link.click();
+            showToast('QR Code डाउनलोड हो गया!');
+        }
+
+        // Barcode Generator using Barcode API
+        function generateBarcode() {
+            const text = document.getElementById('barcode-text').value.trim();
+            
+            if (!text) {
+                document.getElementById('barcode-text').classList.add('shake');
+                setTimeout(() => document.getElementById('barcode-text').classList.remove('shake'), 500);
+                showToast('कृपया टेक्स्ट डालें!');
+                return;
+            }
+            
+            const originalContent = showLoading('barcode-btn');
+            
+            const barcodeImage = document.getElementById('barcode-image');
+            barcodeImage.src = `https://barcode.tec-it.com/barcode.ashx?data=${encodeURIComponent(text)}&code=Code128&multiplebarcodes=false&translate-esc=false&unit=Fit&dpi=96&imagetype=Gif&rotation=0&color=%23000000&bgcolor=%23ffffff&qunit=Mm&quiet=0`;
+            
+            barcodeImage.onload = function() {
+                document.getElementById('barcode-result').classList.remove('hidden');
+                showToast('Barcode जनरेट हो गया!');
+                hideLoading('barcode-btn', originalContent);
+            };
+            
+            barcodeImage.onerror = function() {
+                showToast('Barcode जनरेट करने में त्रुटि!');
+                hideLoading('barcode-btn', originalContent);
+            };
+        }
+
+        // Download Barcode
+        function downloadBarcode() {
+            const barcodeImage = document.getElementById('barcode-image');
+            const link = document.createElement('a');
+            link.download = 'barcode.gif';
+            link.href = barcodeImage.src;
+            link.click();
+            showToast('Barcode डाउनलोड हो गया!');
+        }
+
+        // Enter key support for inputs
+        document.getElementById('long-url').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') shortenURL();
+        });
+        
+        document.getElementById('qr-text').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generateQR();
+        });
+        
+        document.getElementById('barcode-text').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generateBarcode();
+        });
+
+        // Add floating animation to background elements on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating');
+            parallax.forEach(element => {
+                const speed = 0.5;
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+  </html>
