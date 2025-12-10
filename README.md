@@ -71,6 +71,18 @@
 
 ---
 
+## 👨🏻‍💻 ᴅᴇᴠᴇʟᴏᴘᴇʀꜱ
+
+[<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" width="20"> **ᴊᴏɪɴ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ**](https://t.me/providerbotz)
+
+---
+
+## ⏱️ ᴡᴀᴛᴄʜ ᴛʜᴇ ꜱɪᴛᴇ
+
+[<img src="https://cdn-icons-png.flaticon.com/512/159/159748.png" width="20"> **ᴡᴀᴛᴄʜ ɴᴏᴡ**](https://providerbotz.github.io/MultiT/)
+
+---
+
 ## ❤️ ꜱᴜᴘᴘᴏʀᴛ ᴛʜɪꜱ ᴘʀᴏᴊᴇᴄᴛ
 
-ɢɪᴠᴇ ᴀ ⭐ ᴏɴ ɢɪᴛʜᴜʙ ᴛᴏ ᴍᴏᴛɪᴠᴀᴛᴇ ꜰᴜᴛᴜʀᴇ ᴜᴘᴅᴀᴛᴇꜱ!
+ɢɪᴠᴇ ⭐ ᴏɴ ɢɪᴛʜᴜʙ ᴛᴏ ᴍᴏᴛɪᴠᴀᴛᴇ ᴍᴏʀᴇ ᴜᴘᴅᴀᴛᴇꜱ!
