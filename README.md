@@ -1,8 +1,8 @@
 ## 🚀 ᴍᴜʟᴛɪ-ᴛᴏᴏʟ ɢᴇɴᴇʀᴀᴛᴏʀ: ʏᴏᴜʀ ᴜʟᴛɪᴍᴀᴛᴇ ᴅɪɢɪᴛᴀʟ ᴘᴏᴡᴇʀʜᴏᴜꜱᴇ!
 
-[![ᴠɪᴇᴡꜱ](https://komarev.com/ghpvc/?username=YOUR_GITHUB&color=blue&style=flat-square)]()
-[![ꜱᴛᴀʀꜱ](https://img.shields.io/github/stars/YOUR_GITHUB/YOUR_REPO?style=flat-square)]()
-[![ꜰᴏʀᴋꜱ](https://img.shields.io/github/forks/YOUR_GITHUB/YOUR_REPO?style=flat-square)]()
+[![ᴠɪᴇᴡꜱ](https://komarev.com/ghpvc/?username=providerbotz&color=blue&style=flat-square)]()
+[![ꜱᴛᴀʀꜱ](https://img.shields.io/github/stars/providerbotz/MultiT?style=flat-square)]()
+[![ꜰᴏʀᴋꜱ](https://img.shields.io/github/forks/providerbotz/MultiT?style=flat-square)]()
 
 ---
 
