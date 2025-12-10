@@ -51,9 +51,9 @@
 
 **ᴠɪᴇᴡꜱ, ꜱᴛᴀʀꜱ, ꜰᴏʀᴋꜱ** ᴀᴜᴛᴏ-ᴜᴘᴅᴀᴛᴇᴅ:
 
-[![ᴘʀᴏғɪʟᴇ ᴠɪᴇᴡꜱ](https://komarev.com/ghpvc/?username=YOUR_GITHUB&color=red&style=flat-square)]()  
-[![ꜱᴛᴀʀꜱ](https://img.shields.io/github/stars/YOUR_GITHUB/YOUR_REPO?style=flat-square&color=yellow)]()  
-[![ꜰᴏʀᴋꜱ](https://img.shields.io/github/forks/YOUR_GITHUB/YOUR_REPO?style=flat-square&color=orange)]()
+[![ᴘʀᴏғɪʟᴇ ᴠɪᴇᴡꜱ](https://komarev.com/ghpvc/?username=providerbotz&color=red&style=flat-square)]()  
+[![ꜱᴛᴀʀꜱ](https://img.shields.io/github/stars/providerbotz/MultiT?style=flat-square&color=yellow)]()  
+[![ꜰᴏʀᴋꜱ](https://img.shields.io/github/forks/providerbotz/MultiT?style=flat-square&color=orange)]()
 
 ---
 
